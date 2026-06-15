@@ -15,6 +15,34 @@ class Student:
         else:
             return 'Ошибка'
 
+    def middle_grade(self):
+        count_grades, total_grades = [], []
+        for i in self.grades.values():
+            count_grades.append(len(i)), total_grades.append(sum(i))
+        if not count_grades:
+            return 0
+        return sum(total_grades) / sum(count_grades)
+
+    def __str__(self):
+        return (f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.middle_grade()}\n'
+                f'Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\n'
+                f'Завершенные курсы: {', '.join(self.finished_courses)}')
+
+    def __eq__(self, other):
+        if isinstance(other, type(self)):
+            return self.middle_grade() == other.middle_grade()
+        return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, type(self)):
+            return self.middle_grade() < other.middle_grade()
+        return NotImplemented
+
+    def __le__(self, other):
+        if isinstance(other, type(self)):
+            return self.middle_grade() <= other.middle_grade()
+        return NotImplemented
+
 
 class Mentor:
     def __init__(self, name, surname):
@@ -25,6 +53,21 @@ class Lecturer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
+
+    def middle_grade(self):
+        return Student.middle_grade(self)
+
+    def __str__(self):
+        return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.middle_grade()}'
+
+    def __eq__(self, other):
+        return Student.__eq__(self, other)
+
+    def __lt__(self, other):
+        return Student.__lt__(self, other)
+
+    def __le__(self, other):
+        return Student.__le__(self, other)
 
 
 class Reviewer(Mentor):
@@ -37,18 +80,5 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
-
-lecturer = Lecturer('Иван', 'Иванов')
-reviewer = Reviewer('Пётр', 'Петров')
-student = Student('Алёхина', 'Ольга', 'Ж')
-
-student.courses_in_progress += ['Python', 'Java']
-lecturer.courses_attached += ['Python', 'C++']
-reviewer.courses_attached += ['Python', 'C++']
-
-print(student.rate_lecture(lecturer, 'Python', 7))
-print(student.rate_lecture(lecturer, 'Java', 8))
-print(student.rate_lecture(lecturer, 'C++', 8))
-print(student.rate_lecture(reviewer, 'Python', 6))
-
-print(lecturer.grades)
+    def __str__(self):
+        return f'Имя: {self.name}\nФамилия: {self.surname}'
