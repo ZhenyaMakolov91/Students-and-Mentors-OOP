@@ -15,7 +15,7 @@ class Student:
         else:
             return 'Ошибка'
 
-    def middle_grade(self):
+    def _middle_grade(self):
         count_grades, total_grades = [], []
         for i in self.grades.values():
             count_grades.append(len(i)), total_grades.append(sum(i))
@@ -24,23 +24,23 @@ class Student:
         return sum(total_grades) / sum(count_grades)
 
     def __str__(self):
-        return (f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self.middle_grade()}\n'
+        return (f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {self._middle_grade()}\n'
                 f'Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\n'
                 f'Завершенные курсы: {', '.join(self.finished_courses)}')
 
     def __eq__(self, other):
         if isinstance(other, type(self)):
-            return self.middle_grade() == other.middle_grade()
+            return self._middle_grade() == other._middle_grade()
         return NotImplemented
 
     def __lt__(self, other):
         if isinstance(other, type(self)):
-            return self.middle_grade() < other.middle_grade()
+            return self._middle_grade() < other._middle_grade()
         return NotImplemented
 
     def __le__(self, other):
         if isinstance(other, type(self)):
-            return self.middle_grade() <= other.middle_grade()
+            return self._middle_grade() <= other._middle_grade()
         return NotImplemented
 
 
@@ -54,11 +54,11 @@ class Lecturer(Mentor):
         super().__init__(name, surname)
         self.grades = {}
 
-    def middle_grade(self):
-        return Student.middle_grade(self)
+    def _middle_grade(self):
+        return Student._middle_grade(self)
 
     def __str__(self):
-        return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.middle_grade()}'
+        return f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self._middle_grade()}'
 
     def __eq__(self, other):
         return Student.__eq__(self, other)
@@ -82,3 +82,26 @@ class Reviewer(Mentor):
 
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}'
+
+
+student1, student2 = Student('Виктория', 'Панина', 'Ж'), Student('Владислав', 'Кузнецов', 'М')
+lecturer1, lecturer2 = Lecturer('Иван', 'Плугарь'), Lecturer('Татьяна', 'Литвинова')
+reviewer1, reviewer2 = Reviewer('Лидия', 'Стец'), Reviewer('Сергей', 'Коноваленко')
+
+student1.add_courses('Анлийский язык'), student2.add_courses('Информатика')
+student1.courses_in_progress += ['Python', 'SQL', 'C++']
+student2.courses_in_progress += ['C++', 'Git', 'Python', 'JavaScript']
+lecturer1.courses_attached.append('Python'), lecturer2.courses_attached.append('C++')
+reviewer1.courses_attached.append('Python'), reviewer2.courses_attached.append('C++')
+
+student1.rate_lecture(lecturer1, 'Python', 9), student1.rate_lecture(lecturer2, 'C++', 8)
+student2.rate_lecture(lecturer1, 'Python', 7), student2.rate_lecture(lecturer2, 'C++', 6)
+reviewer1.rate_hw(student1, 'Python', 10), reviewer1.rate_hw(student2, 'Python', 8)
+reviewer2.rate_hw(student1, 'C++', 8), reviewer2.rate_hw(student2, 'Python', 9)
+
+print(reviewer1, reviewer2, sep='\n\n', end='\n\n')
+print(lecturer1, lecturer2, sep='\n\n', end='\n\n')
+print(student1, student2, sep='\n\n', end='\n\n')
+
+print(student1 == student2, student1 < student2, student1 > student2, sep=', ')
+print(lecturer1 == lecturer2, lecturer1 < lecturer2, lecturer1 > lecturer2, sep=', ')
