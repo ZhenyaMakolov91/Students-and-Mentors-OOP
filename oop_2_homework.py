@@ -87,17 +87,13 @@ class Reviewer(Mentor):
 def middle_grades_all_students(students, course):
     res, my_students = [], list(filter(lambda x: course in x.grades, students))
     for student in my_students:
-        for my_course, grades in student.grades.items():
-            if my_course == course:
-                res.append(sum(grades))
+        res.append(sum(student.grades[course]))
     return f'Средняя оценка студентов за домашние задания по курсу {course}: {sum(res) / len(my_students)}'
 
 def middle_grades_all_lecturers(lecturers, course):
     res, my_lectures = [], list(filter(lambda x: course in x.grades, lecturers))
     for lecture in my_lectures:
-        for my_course, grades in lecture.grades.items():
-            if my_course == course:
-                res.append(sum(grades))
+        res.append(sum(lecture.grades[course]))
     return f'Средняя оценка лекторов в рамках курса {course}: {sum(res) / len(my_lectures)}'
 
 student1, student2 = Student('Виктория', 'Панина', 'Ж'), Student('Владислав', 'Кузнецов', 'М')
