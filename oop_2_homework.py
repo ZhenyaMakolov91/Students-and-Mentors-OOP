@@ -85,12 +85,20 @@ class Reviewer(Mentor):
 
 
 def middle_grades_all_students(students, course):
-    res = sum(i._middle_grade() for i in students if course in i.courses_in_progress) / len(students)
-    return f'Средняя оценка студентов за домашние задания по курсу {course}: {res}'
+    res, my_students = [], list(filter(lambda x: course in x.grades, students))
+    for student in my_students:
+        for my_course, grades in student.grades.items():
+            if my_course == course:
+                res.append(sum(grades))
+    return f'Средняя оценка студентов за домашние задания по курсу {course}: {sum(res) / len(my_students)}'
 
 def middle_grades_all_lecturers(lecturers, course):
-    res = sum(i._middle_grade() for i in lecturers if course in i.courses_attached) / len(lecturers)
-    return f'Средняя оценка лекторов в рамках курса {course}: {res}'
+    res, my_lectures = [], list(filter(lambda x: course in x.grades, lecturers))
+    for lecture in my_lectures:
+        for my_course, grades in lecture.grades.items():
+            if my_course == course:
+                res.append(sum(grades))
+    return f'Средняя оценка лекторов в рамках курса {course}: {sum(res) / len(my_lectures)}'
 
 student1, student2 = Student('Виктория', 'Панина', 'Ж'), Student('Владислав', 'Кузнецов', 'М')
 lecturer1, lecturer2 = Lecturer('Иван', 'Плугарь'), Lecturer('Татьяна', 'Литвинова')
